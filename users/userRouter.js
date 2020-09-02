@@ -1,5 +1,4 @@
 const express = require('express');
-const { restart } = require('nodemon');
 Users = require('./userDb')
 Posts = require('../posts/postDb')
 
@@ -56,8 +55,18 @@ router.delete('/:id', (req, res) => {
   })
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateUserId, (req, res) => {
   // do your magic!
+  const editedUser = req.body
+  const { id } = req.params
+  
+  Users.update(id, editedUser)
+  .then(thenRes => {
+    res.status(200).json(editedUser)
+  })
+  .catch(err => {
+    res.status(404).json({ message: "user by that ID was not found"})
+  })
 });
 
 //custom middleware
