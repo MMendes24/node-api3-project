@@ -22,16 +22,9 @@ router.get('/', (req, res) => {
   })
 });
 
-router.get('/:id', (req, res) => {
-  const id = req.params.id
+router.get('/:id', validateUserId, (req, res) => {
   // do your magic!
-  Users.getById(id)
-  .then(user => {
-    res.status(200).json(user)
-  })
-  .catch(err => {
-    res.status(404).json({message: "No user by that ID exists"})
-  })
+    res.status(200).json(req.user)
 });
 
 router.get('/:id/posts', (req, res) => {
@@ -48,16 +41,30 @@ router.put('/:id', (req, res) => {
 
 //custom middleware
 
-// function validateUserId(req, res, next) {
-//   // do your magic!
-// }
+function validateUserId(req, res, next) {
+    // do your magic!
+    const { id } = req.params
+    let user = {}
 
-// function validateUser(req, res, next) {
-//   // do your magic!
-// }
+    Users.getById(id)
+    .then(userData => {
+      console.log(userData)
+      user = userData
+      if (user) {
+        req.user = user
+        next()
+      } else {
+        res.status(400).json({ message: "invalid user id" })
+      }
+    })
+}
 
-// function validatePost(req, res, next) {
-//   // do your magic!
-// }
+function validateUser(req, res, next) {
+  // do your magic!
+}
+
+function validatePost(req, res, next) {
+  // do your magic!
+}
 
 module.exports = router;
