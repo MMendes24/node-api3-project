@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
     res.status(200).json(users)
   })
   .catch(err => {
-    console.log("How did you get here?")
+    res.status(404).json({ message: "users not found"})
   })
 });
 
@@ -39,13 +39,14 @@ router.get('/:id/posts', validateUserId, (req, res) => {
     res.status(200).json(postData)
   })
   .catch(err => {
-    console.log("Somehow hit this error.")
+    res.status(404).json({ message: "user by that ID does not exist"})
   })
 });
 
 router.delete('/:id', (req, res) => {
   // do your magic!
   const { id } = req.params
+
   Users.remove(id)
   .then(deletedUser => {
     res.status(200).json({ message: "post deleted"} )
@@ -59,7 +60,7 @@ router.put('/:id', validateUserId, (req, res) => {
   // do your magic!
   const editedUser = req.body
   const { id } = req.params
-  
+
   Users.update(id, editedUser)
   .then(thenRes => {
     res.status(200).json(editedUser)
