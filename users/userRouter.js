@@ -1,4 +1,5 @@
 const express = require('express');
+Users = require('./userDb')
 
 const router = express.Router();
 
@@ -12,10 +13,25 @@ router.post('/:id/posts', (req, res) => {
 
 router.get('/', (req, res) => {
   // do your magic!
+  Users.get()
+  .then(users => {
+    res.status(200).json(users)
+  })
+  .catch(err => {
+    res.status(404).json({message: "could not find users"})
+  })
 });
 
 router.get('/:id', (req, res) => {
+  const id = req.params.id
   // do your magic!
+  Users.getById(id)
+  .then(user => {
+    res.status(200).json(user)
+  })
+  .catch(err => {
+    res.status(404).json({message: "No user by that ID exists"})
+  })
 });
 
 router.get('/:id/posts', (req, res) => {
@@ -32,16 +48,16 @@ router.put('/:id', (req, res) => {
 
 //custom middleware
 
-function validateUserId(req, res, next) {
-  // do your magic!
-}
+// function validateUserId(req, res, next) {
+//   // do your magic!
+// }
 
-function validateUser(req, res, next) {
-  // do your magic!
-}
+// function validateUser(req, res, next) {
+//   // do your magic!
+// }
 
-function validatePost(req, res, next) {
-  // do your magic!
-}
+// function validatePost(req, res, next) {
+//   // do your magic!
+// }
 
 module.exports = router;
