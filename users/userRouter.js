@@ -27,8 +27,12 @@ router.get('/:id', validateUserId, (req, res) => {
     res.status(200).json(req.user)
 });
 
-router.get('/:id/posts', (req, res) => {
+router.get('/:id/posts', validateUserId, (req, res) => {
   // do your magic!
+  Users.getUserPosts(req.params.id).
+  then(postData => {
+    res.status(200).json(postData)
+  })
 });
 
 router.delete('/:id', (req, res) => {
@@ -50,6 +54,7 @@ function validateUserId(req, res, next) {
     .then(userData => {
       console.log(userData)
       user = userData
+
       if (user) {
         req.user = user
         next()
