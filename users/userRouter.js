@@ -1,24 +1,29 @@
 const express = require('express');
+const { restart } = require('nodemon');
 Users = require('./userDb')
+Posts = require('../posts/postDb')
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
+router.post('/', validateUser, (req, res) => {
   // do your magic!
+  res.status(201).json(req.body)
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', validatePost, (req, res) => {
   // do your magic!
+    res.status(201).json(req.body)
 });
 
 router.get('/', (req, res) => {
+
   // do your magic!
   Users.get()
   .then(users => {
     res.status(200).json(users)
   })
   .catch(err => {
-    res.status(404).json({message: "could not find users"})
+    console.log("How did you get here?")
   })
 });
 
@@ -29,9 +34,13 @@ router.get('/:id', validateUserId, (req, res) => {
 
 router.get('/:id/posts', validateUserId, (req, res) => {
   // do your magic!
-  Users.getUserPosts(req.params.id).
-  then(postData => {
+
+  Users.getUserPosts(req.params.id)
+  .then(postData => {
     res.status(200).json(postData)
+  })
+  .catch(err => {
+    console.log("Somehow hit this error.")
   })
 });
 
@@ -47,6 +56,7 @@ router.put('/:id', (req, res) => {
 
 function validateUserId(req, res, next) {
     // do your magic!
+
     const { id } = req.params
     let user = {}
 
@@ -65,11 +75,31 @@ function validateUserId(req, res, next) {
 }
 
 function validateUser(req, res, next) {
+  const { id } = req.params 
   // do your magic!
+  if (req.body === {}) {
+    res.status(400).json({ message: "missing user data" })
+  } else if (!req.body.name) {
+    res.status(400).json({ message: "missing required name field" })
+  } else {
+    Users.insert(req.body)
+    next()
+  }
+
 }
 
 function validatePost(req, res, next) {
+  const { id } = req.params
   // do your magic!
+  if(req.body === {}) {
+    res.status.json({ message: "missing post data"})
+  } else if (!req.body.text) {
+    res.status(400).json({ message: "missing required text field"})
+  } else {
+    req.body.user_id = id
+    Posts.insert(req.body)
+    next()
+  }
 }
 
 module.exports = router;
