@@ -33,7 +33,6 @@ router.get('/:id', validateUserId, (req, res) => {
 
 router.get('/:id/posts', validateUserId, (req, res) => {
   // do your magic!
-
   Users.getUserPosts(req.params.id)
   .then(postData => {
     res.status(200).json(postData)

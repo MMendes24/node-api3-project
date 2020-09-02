@@ -7,15 +7,17 @@ const userRouter = require("./users/userRouter")
 server.use(express.json())
 
 // SETTING UP THE SERVER TO USE THE ROUTER //
-server.use(logger)
+const logger = () =>(req, res, next)=> {
+  console.log(`a ${req.method} was made to ${req.url} at ${new Date()}`);
+  next();
+}
+
+server.use(logger())
 server.use("/api/users", userRouter)
 
 //custom middleware
 
-function logger(req, res, next) {
-  console.log(`a ${req.method} request was made to ${req.url} at ${new Date()}`)
-  next()
-}
+
 
 
 
