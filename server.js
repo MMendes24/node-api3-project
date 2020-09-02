@@ -7,15 +7,23 @@ const userRouter = require("./users/userRouter")
 server.use(express.json())
 
 // SETTING UP THE SERVER TO USE THE ROUTER //
+server.use(logger)
 server.use("/api/users", userRouter)
+
+//custom middleware
+
+function logger(req, res, next) {
+  console.log(`a ${req.method} request was made to ${req.url}`)
+  next()
+}
+
+
 
 server.get('/', (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);
 });
 
 
-//custom middleware
 
-// function logger(req, res, next) {}
 
 module.exports = server;
