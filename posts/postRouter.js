@@ -30,8 +30,15 @@ router.delete('/:id', validatePostId, (req, res) => {
   })
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validatePostId, (req, res) => {
   // do your magic!
+  Posts.update(req.params.id, req.body)
+  .then(thenRes => {
+    res.status(201).json(req.body)
+  })
+  .catch(err => {
+    res.status(500).json({ errorMessage: "post could not be edited"})
+  })
 });
 
 // custom middleware
