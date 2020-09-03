@@ -120,3 +120,18 @@ function validatePost(req, res, next) {
 }
 
 module.exports = router;
+
+// function validateUserId(req, res, next) {
+//   Users.getById(req.params.id)
+//   .then(user => {
+//       if (user) {
+//           console.log("user", user);
+//           next();
+//       } else {
+//           res.status(400).json({ message: "invalid user id" });
+//       }
+//   })
+//   .catch(error => {
+//       res.status(500).json({ message: error.message });
+//   });
+// }

@@ -2,6 +2,7 @@ const express = require('express');
 
 const server = express();
 const userRouter = require("./users/userRouter")
+const postRouter = require("./posts/postRouter")
 
 // MAKING SURE SERVOR KNOWS ABOUT .JSON //
 server.use(express.json())
@@ -14,6 +15,7 @@ const logger = () =>(req, res, next)=> {
 
 server.use(logger())
 server.use("/api/users", userRouter)
+server.use("/api/posts", postRouter)
 
 //custom middleware
 
